@@ -1,0 +1,75 @@
+{% extends 'shop/base.html' %}
+{% block title %}
+   Shopping cart
+{% endblock title %}
+
+{% block content %}
+    <h1>Your shopping cart</h1>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Image</th>
+                <th scope="col">Product</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Remove</th>
+                <th scope="col">Unit price</th>
+                <th scope="col">Price</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for item in cart %}
+          {% with product=item.product  %}
+            <tr>
+                <td>
+                    <a href="{{product.get_absolute_url}}">
+                        <img src="{{product.image.url}}" width="150" height="100">
+                    </a>
+                </td>
+                <td>{{product.name}}</td>
+                <td>
+                    <form action="{% url 'cart:cart_add' product.id %}" method="POST">
+                        {{item.update_quantity_form.quantity}}
+                        {{item.update_quantity_form.override}}
+                        <input type="submit" value="update">
+                        {% csrf_token %}
+                    </form>
+                </td>
+                <td>
+                    <form action="{% url 'cart:cart_remove' product.id %}" method="POST">
+                        <input type="submit" value="remove">
+                        {% csrf_token %}
+                    </form>
+                </td>
+                <td>{{item.price}}</td>
+                <td>{{item.total_price}}</td>
+            </tr>
+          {% endwith %}
+        {% endfor %}
+        <tr>
+            <td>total price :</td>
+            <td colspan="4"></td>
+            <td>{{cart.get_total_price}}</td>
+        </tr>
+        {% if cart.coupon %}
+          <tr>
+              <td>Price with {{cart.coupon.discount}}%</td>
+              <td colspan="4"></td>
+              <td style="color:green;">{{cart.get_total_price_after_discount}}</td>
+          </tr>
+        {% endif %}
+        </tbody>
+    </table>
+    <p>
+        <form action="{% url 'coupons:apply_coupon' %}" method="POST">
+            {% csrf_token %}
+            {{coupon_form}}
+            <button type="submit">applay</button>
+        </form>
+    </p>
+  <p>
+      <a href="{% url 'shop:product_list'%}" style="text-decoration: none; background-color:rgb(14, 177, 14); color:aliceblue; padding: 10px; text-align:center;"> Continue Buy</a>
+      <br/>
+      <hr/>
+      <a href="{% url 'orders:order_create' %}"  style="text-decoration: none; background-color:rgb(14, 177, 14); color:aliceblue; padding: 10px; text-align:center;">Checkout</a>
+  </p>
+{% endblock content %}<h1>Shopping Cart</h1>

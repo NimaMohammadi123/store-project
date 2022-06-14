@@ -1,0 +1,24 @@
+{% extends 'shop/base.html' %}
+{% load i18n %}
+
+
+{% block title %}
+{{products.name}}
+{% endblock title %}
+
+
+{% block content %}
+   <h1>{{products.name}}</h1>
+   <hr/>
+   <img src="{{products.image.url}}" width="500" height="400" alt="">
+   <hr/>
+   {{products.price}} {% trans "$" %}
+   <hr/>
+   <form action="{% url 'cart:cart_add' products.id %}" method="POST">
+      {% csrf_token %}
+      {{form.as_p}}
+      <button type="submit">{% trans "ADD" %}</button>
+   </form>
+
+{% endblock content %}
+

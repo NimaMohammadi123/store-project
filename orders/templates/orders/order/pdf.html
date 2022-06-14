@@ -1,0 +1,41 @@
+<html>
+    <body>
+        <h2>MyShop</h2>
+        <p>name : {{order.first_name}} {{order.last_name}}</p> <br/>
+        <p>email : {{order.email}}</p><br/>
+        <p>created : {{order.create|date:"M d y"}}</p>
+        <h3>order detail</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>product</th>
+                    <th>price</th>
+                    <th>quantity</th>
+                    <th>cost</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for items in order.item.all %}
+                  <tr>
+                      <td>{{items.product.name}}</td>
+                      <td>{{items.price}}</td>
+                      <td>{{items.quantity}}</td>
+                      <td>{{items.get_cost}}</td>
+                  </tr>
+                {% endfor %}
+                <tr>
+                    <td colspan="3">total price</td>
+                    <td>{{order.total_cost}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <p>
+            <h3>status:</h3>
+            {% if order.paid %}
+              paid
+              {% else %}
+                wait for paid
+            {% endif %}
+        </p>
+    </body>
+</html>
